@@ -1,0 +1,34 @@
+mouse = game.Players.LocalPlayer:GetMouse()
+tool = Instance.new("Tool")
+tool.RequiresHandle = false
+tool.Name = "Shadow Step"
+tool.Activated:connect(function()
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Ensure that the character's humanoid contains an "Animator" object
+local humanoid = character:WaitForChild("Humanoid")
+local animator = humanoid:WaitForChild("Animator")
+
+-- Create a new "Animation" instance and assign an animation asset ID
+local kickAnimation = Instance.new("Animation")
+kickAnimation.AnimationId = "rbxassetid://13499771836"
+
+-- Load the animation onto the animator
+local kickAnimationTrack = animator:LoadAnimation(kickAnimation)
+
+-- Play the animation track
+kickAnimationTrack:Play()
+
+-- If a named event was defined for the animation, connect it to "GetMarkerReachedSignal()"
+kickAnimationTrack:GetMarkerReachedSignal("KickEnd"):Connect(function(paramString)
+	print(paramString)
+end)
+
+local pos = mouse.Hit+Vector3.new(0,2.5,0)
+pos = CFrame.new(pos.X,pos.Y,pos.Z)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = pos
+end)
+tool.Parent = game.Players.LocalPlayer.Backpack
